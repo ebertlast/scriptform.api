@@ -1,0 +1,11 @@
+/*Zonas*/
+IF OBJECT_ID('ZON','U') IS NOT NULL DROP TABLE ZON
+GO
+CREATE TABLE [dbo].[ZON](
+	[ZonaID] [varchar](2) NOT NULL,
+	[DescripcionZona] [varchar](15) NOT NULL,
+)
+GO
+ALTER TABLE [dbo].[ZON] ADD CONSTRAINT [ZonaID] PRIMARY KEY CLUSTERED ([ZonaID] ASC)
+GO
+

@@ -15,5 +15,40 @@ return [
             'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
+
+        // Database settings
+        'database_default' => [
+            'dbhost' => 'DESKTOP-IL7UVNG',
+            'dbname' => 'ScriptForms',
+            'dbuser' => 'sa',
+            'dbpasswd' => '123456'
+        ],
+
+        //Mailer settings
+        'mailer2' => [
+            'Host' => 'arauca.tepuyserver.net',
+            'SMTPAuth' => true,
+            'Username' => 'ezerpa@dosisunitarias.com',
+            'Password' => '201619duv',
+            'SMTPSecure' => 'tls',
+            'Port' => 25,
+            'MailerMail' => 'ezerpa@dosisunitarias.com',
+            'MailerName' => 'ScriptForms',
+            'ReplyToMail' => 'ezerpa@dosisunitarias.com',
+            'ReplyToName' => 'Información'
+        ],
+        
+        'mailer' => [
+            'SMTPSecure' => 'tls',
+            'Username' => 'ebert15@hotmail.com',
+            'Password' => '123enclave.21978',
+            'MailerMail' => 'ebert15@hotmail.com',
+            'MailerName' => 'ScriptForms',
+            'Host' => 'smtp.live.com',
+            'Port' => 587,
+            'SMTPAuth' => true,
+            'ReplyToMail' => 'ebertunerg@gmail.com',
+            'ReplyToName' => 'Información'
+        ],
     ],
 ];

@@ -26,5 +26,8 @@ require __DIR__ . '/../src/middleware.php';
 // Register routes
 require __DIR__ . '/../src/routes.php';
 
+// Register my App
+require __DIR__ . '/../app/app_loader.php';
+
 // Run app
 $app->run();
