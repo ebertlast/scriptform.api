@@ -195,4 +195,176 @@ class ReppModel
             sqlsrv_free_stmt($stmt);
         }
     }
+
+    public function NuevoParametro($reporteid, $tipo, $nombre, $query)
+    {
+        try
+        {
+            $result = array();
+            $sqlString = "EXEC DBO.SPS_ABCS_REPP @ACCION=?, @REPORTEID=?, @TIPO=?, @NOMBRE=?, @QUERY=?";
+            $params = array(
+                array('A', SQLSRV_PARAM_IN),
+                array(&$reporteid, SQLSRV_PARAM_IN),
+                array(&$tipo, SQLSRV_PARAM_IN),
+                array(&$nombre, SQLSRV_PARAM_IN),
+                array(&$query, SQLSRV_PARAM_IN)
+            );
+            $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            // $data = array();
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            // while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
+            //     $data[] = $row;
+            // }
+            $this->response->setResponse(true);
+            $this->response->result = true;
+            return $this->response;
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
+
+    public function BorrarParametro($parametroid)
+    {
+        try
+        {
+            $result = array();
+            $sqlString = "EXEC DBO.SPS_ABCS_REPP @ACCION=?, @PARAMETROID=?";
+            $params = array(
+                array('B', SQLSRV_PARAM_IN),
+                array(&$parametroid, SQLSRV_PARAM_IN)
+            );
+            $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            // $data = array();
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            // while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
+            //     $data[] = $row;
+            // }
+            $this->response->setResponse(true);
+            $this->response->result = true;
+            return $this->response;
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
+
+    public function ActualizarParametro($parametroid, $tipo, $nombre, $query, $valor)
+    {
+        try
+        {
+            $result = array();
+            $sqlString = "EXEC DBO.SPS_ABCS_REPP @ACCION=?, @PARAMETROID=?, @TIPO=?, @NOMBRE=?, @QUERY=?, @VALOR=?";
+            $params = array(
+                array('C', SQLSRV_PARAM_IN),
+                array(&$parametroid, SQLSRV_PARAM_IN),
+                array(&$tipo, SQLSRV_PARAM_IN),
+                array(&$nombre, SQLSRV_PARAM_IN),
+                array(&$query, SQLSRV_PARAM_IN),
+                array(&$valor, SQLSRV_PARAM_IN),
+            );
+            $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            // $data = array();
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            // while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
+            //     $data[] = $row;
+            // }
+            $this->response->setResponse(true);
+            $this->response->result = true;
+            return $this->response;
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
 }
