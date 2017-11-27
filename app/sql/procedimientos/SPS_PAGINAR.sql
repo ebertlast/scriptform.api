@@ -65,10 +65,10 @@ GO
 
 DECLARE @PageCount int
 EXEC	SPS_PAGINAR
-	@SQLString = 'SELECT top 1000 * FROM ScriptForms.dbo.AFI',
+	@SQLString = 'SELECT top 20 * FROM ScriptForms.dbo.AFI',
 	--@SQLString = 'EXEC [ScriptForms].[dbo].[SPS_ABCS_AFI]',
 	@PageSize = 10,
-	@PageNumber = 100,
+	@PageNumber = 2,
 	@PageCount = @PageCount OUTPUT
 
 PRINT 'PÁGINA 1 DE '+CAST(@PageCount AS VARCHAR)

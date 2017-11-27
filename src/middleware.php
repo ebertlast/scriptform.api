@@ -9,8 +9,8 @@ $app->add(function ($request, $response, $next) {
 
     // Obtenemos la ruta que esta intentando acceder el usuario
     // en el futuro se quiere validar los accesos a las rutas por usuario desde aquí
-    $route = $request->getUri()->getPath();//RUTA ACTUAL A LA QUE INTENTA ACCEDER
-    $route = explode("/",$route)[0];
+    $route = $request->getUri()->getPath(); //RUTA ACTUAL A LA QUE INTENTA ACCEDER
+    $route = explode("/", $route)[0];
     // $route = $request->getAttribute('route'); // NO FUNCIONO NUNCA
     $method = $request->getMethod();
 
@@ -21,22 +21,30 @@ $app->add(function ($request, $response, $next) {
     // return $response
     // ->withHeader('Content-type', 'application/json')
     // ->withJson(($respuesta))
-    // ; 
+    // ;
     // ----------------------------------------------------------
-    
+
     /*SECCIÓN DE TOKENS*/
     //!($route==="ususuw" && $method === "GET")
 
     // Para determinar si se exige el token en la solicitud
     $supervisar = true;
-    switch($route){
+    $generarNuevoToken = true;
+    switch ($route) {
         case 'usuarios':
-            if(strrpos($request->getUri()->getPath(),'ingresar')>0 && $method=='GET'){
+            if (strrpos($request->getUri()->getPath(), 'ingresar') > 0 && $method == 'GET') {
                 $supervisar = false;
+            }
+            if (
+                strrpos($request->getUri()->getPath(), 'sesion') > 0
+                && strrpos($request->getUri()->getPath(), 'supervisar') > 0
+                && $method == 'GET'
+            ) {
+                $generarNuevoToken = false;
             }
             break;
         case 'sedes':
-            if($method=='GET'){
+            if ($method == 'GET') {
                 $supervisar = false;
             }
             break;
@@ -44,39 +52,40 @@ $app->add(function ($request, $response, $next) {
             $supervisar = true;
     }
     // $supervisar = false; // *************************** + O J O +
-    if($supervisar){
+    // echo '$generarNuevoToken: ' . $generarNuevoToken;
+    if ($supervisar) {
         $authorization = $request->getHeader("Authorization");
         // var_dump(count($authorization));
 
         $nuevoToken = "";
 
         $respuesta = new Response();
-        $respuesta -> SetResponse(true);
+        $respuesta->SetResponse(true);
 
         // $respuesta->result = count($authorization);
         // // $respuesta->token = 'ebert';
         // return $response
         // ->withHeader('Content-type', 'application/json')
         // ->withJson(($respuesta))
-        // ; 
+        // ;
 
-        
-        if(count($authorization)>0) {
+        if (count($authorization) > 0) {
             $token = explode(" ", $authorization[0])[1];
             // var_dump($token);
-            
-            $jwt = new Tokens();
-            $data = array( );
-            try{
-                $data = $jwt->decode($token);
-            }catch(Exception $e){
-                $respuesta -> SetLogout();
-                $respuesta -> SetResponse (false, "Vuelve a iniciar sesión (". $e->getMessage() .").");
 
+            $jwt = new Tokens();
+
+            $data = array();
+            try {
+                $data = $jwt->decode($token);
+            } catch (Exception $e) {
+                $respuesta->SetLogout();
+                $respuesta->SetResponse(false, "Vuelve a iniciar sesión (" . $e->getMessage() . ").");
+                
                 return $response
                 ->withHeader('Content-type', 'application/json')
                 ->withJson(($respuesta))
-                ; 
+                ;
             }
             // // ************************************************************
             // $respuesta = new Response();
@@ -84,14 +93,18 @@ $app->add(function ($request, $response, $next) {
             // $respuesta -> SetResponse (false, $data->clave);
             // return $response
             // ->withHeader('Content-type', 'application/json')
-            // ->withJson(($respuesta)); 
+            // ->withJson(($respuesta));
             // // ************************************************************
-
+            
             // var_dump($data);
             /*HACER AQUI LAS VALIDACIONES DE SEGURIDAD A LAS RUTAS POR USUARIO*/
             
             // Hacer que el nuevo token se vaya en la respuesta
-            $nuevoToken = $jwt->encode($data);
+            if ($generarNuevoToken) {
+                $nuevoToken = $jwt->encode($data);
+            } else {
+                $nuevoToken = $token;
+            }
 
             $request = $request->withAttribute('token', $nuevoToken);
             // $respuesta -> SetToken($nuevoToken);
@@ -101,19 +114,18 @@ $app->add(function ($request, $response, $next) {
             // $respuesta -> SetResponse (false, $nuevoToken);
             // return $response
             // ->withHeader('Content-type', 'application/json')
-            // ->withJson(($respuesta)); 
+            // ->withJson(($respuesta));
 
+        } else {
 
-        }else{
-    
-            $respuesta -> SetLogout();
-            $respuesta -> SetResponse (false, "Debes iniciar sesión.");
+            $respuesta->SetLogout();
+            $respuesta->SetResponse(false, "Debes iniciar sesión.");
 
             return $response
-            ->withHeader('Content-type', 'application/json')
-            ->withJson(($respuesta))
-            // ->withJson(json_encode($respuesta))
-            ; 
+                ->withHeader('Content-type', 'application/json')
+                ->withJson(($respuesta))
+                // ->withJson(json_encode($respuesta))
+            ;
         }
     }
     /*FIN DE LA SECCION DE TOKENS*/

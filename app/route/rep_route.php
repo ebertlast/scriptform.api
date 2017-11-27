@@ -214,6 +214,46 @@ $app->group('/reportes/', function () {
             );
     });
 
+    $this->put('nuevo/{nombre}/[{query}]', function ($req, $res, $args) {
+        try {
+            $model = new RepModel();
+        } catch (Exception $e) {
+            $response = new Response();
+            $response->SetResponse(false, $e->getMessage());
+            return $res
+                ->withHeader('Content-type', 'application/json')
+                ->getBody()
+                ->write(
+                    json_encode(
+                        $response
+                    )
+                );
+        }
+        $jwt = new Tokens();
+
+        // Obtener el token para enviarlo en la respuesta y los parametros para generar la consulta
+        $token = $req->getAttribute('token');
+
+        $nombre = isset($args['nombre']) ? $args['nombre'] : '';
+        $query = isset($args['query']) ? $args['query'] : '';
+
+        // Llamar el metodo del modelo para generar la respuesta
+        $response = new Response();
+        $response = $model->NuevoReporte($nombre, $query);
+
+        // Enviar el token en la respuesta
+        $response->setToken($token);
+
+        return $res
+            ->withHeader('Content-type', 'application/json')
+            ->getBody()
+            ->write(
+                json_encode(
+                    $response
+                )
+            );
+    });
+
     $this->get('excel/[{reporteid}]', function ($req, $res, $args) {
 
         try {

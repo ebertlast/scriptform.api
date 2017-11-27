@@ -85,6 +85,8 @@ class RepModel
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
             return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
         }
     }
 
@@ -95,7 +97,7 @@ class RepModel
             // ini_set('memory_limit', '128M');
 
             $result = array();
-            $query = "EXEC DBO.SPS_EJECUTAR_CONSULTA @ReporteID = ?";
+            $query = "EXEC DBO.SPS_ABCS_REP @ReporteID = ?";
             $stmt = sqlsrv_prepare($this->db, $query, array(
                 array(&$reporteid, SQLSRV_PARAM_IN),
             )
@@ -235,6 +237,58 @@ class RepModel
             $params = array(
                 array('C', SQLSRV_PARAM_IN),
                 array(&$reporteid, SQLSRV_PARAM_IN),
+                array(&$consulta, SQLSRV_PARAM_IN),
+            );
+            $stmt = sqlsrv_prepare($this->db, $query, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $this->response->setResponse(true);
+            $this->response->result = true;
+            return $this->response;
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
+
+    public function NuevoReporte($nombre, $consulta)
+    {
+        try
+        {
+            $result = array();
+            $query = "EXEC DBO.SPS_ABCS_REP @ACCION=?, @NOMBRE=?, @QUERY=?";
+            $params = array(
+                array('A', SQLSRV_PARAM_IN),
+                array(&$nombre, SQLSRV_PARAM_IN),
                 array(&$consulta, SQLSRV_PARAM_IN),
             );
             $stmt = sqlsrv_prepare($this->db, $query, $params);

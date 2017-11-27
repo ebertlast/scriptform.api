@@ -1,12 +1,13 @@
 <?php
 use App\Lib\Response;
 use App\Lib\Tokens;
-use App\Model\UsuarioModel;
+use App\Model\ArcModel as Model;
 
-$app->group('/usuarios/', function () {
-    $this->get('[{usuario}]', function ($req, $res, $args) {
+$app->group('/archivos/', function () {
+
+    $this->get('[{archivoid}]', function ($req, $res, $args) {
         try {
-            $model = new UsuarioModel();
+            $model = new Model();
         } catch (Exception $e) {
             $response = new Response();
             $response->SetResponse(false, $e->getMessage());
@@ -21,11 +22,16 @@ $app->group('/usuarios/', function () {
         }
         $jwt = new Tokens();
 
+        // Obtener el token con los datos actualizados
         $token = $req->getAttribute('token');
+
+        // Decodificar el token para obtener los datos del usuario
+        // $data = $jwt->decode($token);
+        $archivoid = isset($args['archivoid']) ? $args['archivoid'] : '';
 
         // Llamar el metodo del modelo para generar la respuesta
         $response = new Response();
-        $response = $model->Get(isset($args['usuario']) ? $args['usuario'] : '');
+        $response = $model->Archivos($archivoid);
 
         // Enviar el token en la respuesta
         $response->setToken($token);
@@ -40,9 +46,9 @@ $app->group('/usuarios/', function () {
             );
     });
 
-    $this->get('ingresar/{usuario}/{clave}/{sedeid}', function ($req, $res, $args) {
+    $this->put('nuevo', function ($req, $res, $args) {
         try {
-            $model = new UsuarioModel();
+            $model = new Model();
         } catch (Exception $e) {
             $response = new Response();
             $response->SetResponse(false, $e->getMessage());
@@ -55,47 +61,30 @@ $app->group('/usuarios/', function () {
                     )
                 );
         }
+        $jwt = new Tokens();
 
-        $usuario = $args['usuario'];
-        $clave = $args['clave'];
-        $sedeid = $args['sedeid'];
-
-        return $res
-            ->withHeader('Content-type', 'application/json')
-            ->getBody()
-            ->write(
-                json_encode(
-                    $model->Login($usuario, $clave, $sedeid)
-                )
-            );
-    });
-
-    $this->get('sesion/supervisar', function ($req, $res, $args) {
-        try {
-            $model = new UsuarioModel();
-        } catch (Exception $e) {
-            $response = new Response();
-            $response->SetResponse(false, $e->getMessage());
-            return $res
-                ->withHeader('Content-type', 'application/json')
-                ->getBody()
-                ->write(
-                    json_encode(
-                        $response
-                    )
-                );
-        }
+        // Obtener el token para enviarlo en la respuesta y los parametros para generar la consulta
         $token = $req->getAttribute('token');
-        $respuesta = new Response();
-        $respuesta->SetResponse(true);
-        $respuesta->result = true;
-        $respuesta->setToken($token);
+        $modelo = json_decode($req->getParsedBody()['json'], true)['model'];
+        
+        // Decodificar el token para obtener los datos del usuario
+        $tokenData = $jwt->decode($token);
+        $modelo['USUARIOID'] = $tokenData->USUARIOID;
+        $modelo['SEDEID'] = $tokenData->SEDEID;
+
+        // Llamar el metodo del modelo para generar la respuesta
+        $response = new Response();
+        $response = $model->NuevoArchivo($modelo);
+
+        // Enviar el token en la respuesta
+        $response->setToken($token);
+
         return $res
             ->withHeader('Content-type', 'application/json')
             ->getBody()
             ->write(
                 json_encode(
-                    $respuesta
+                    $response
                 )
             );
     });
