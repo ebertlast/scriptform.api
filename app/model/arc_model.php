@@ -130,7 +130,7 @@ class ArcModel
         try
         {
             $result = array();
-            $sqlString = "EXEC DBO.SPS_ABCS_ARC @ACCION=?, @ARCHIVOID = ?, @FORMULARIOID = ?, @TIPOID = ?, @NUMEROIDENTIFICACION = ?, @MUNICIPIOID = ?, @USUARIOID = ?, @SEDEID = ?, @NUEVOREGISTRO = ?, @CANTIDADBENEFICIARIOS = ?";
+            $sqlString = "EXEC DBO.SPS_ABCS_ARC @ACCION=?, @ARCHIVOID = ?, @FORMULARIOID = ?, @TIPOID = ?, @NUMEROIDENTIFICACION = ?, @MUNICIPIOID = ?, @USUARIOID = ?, @SEDEID = ?, @NUEVOREGISTRO = ?, @CANTIDADBENEFICIARIOS = ?, @SERIALSTICKER = ?";
             $params = array(
                 array('A', SQLSRV_PARAM_IN),
                 array(&$archivo['ARCHIVOID'], SQLSRV_PARAM_IN),
@@ -141,7 +141,8 @@ class ArcModel
                 array(&$archivo['USUARIOID'], SQLSRV_PARAM_IN),
                 array(&$archivo['SEDEID'], SQLSRV_PARAM_IN),
                 array(($archivo['NUEVOREGISTRO'])?"1":"0", SQLSRV_PARAM_IN),
-                array(&$archivo['CANTIDADBENEFICIARIOS'], SQLSRV_PARAM_IN)
+                array(&$archivo['CANTIDADBENEFICIARIOS'], SQLSRV_PARAM_IN),
+                array(&$archivo['SERIALSTICKER'], SQLSRV_PARAM_IN),
             );
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
             if (!$stmt) {
@@ -185,6 +186,57 @@ class ArcModel
             return $this->response;
         } finally {
             sqlsrv_free_stmt($stmt);
+        }
+    }
+
+    public function GenerarSticker($municipioid){
+        // SELECT '11001'+RIGHT(REPLACE(CONVERT(VARCHAR,GETDATE(),102),'.',''),6)+REPLACE(CONVERT(VARCHAR,GETDATE(),108),':','')
+        try
+        {
+            $result = array();
+            $query = "SELECT CODSTICKER = '{$municipioid}'+RIGHT(REPLACE(CONVERT(VARCHAR,GETDATE(),102),'.',''),6)+REPLACE(CONVERT(VARCHAR,GETDATE(),108),':','')";
+            $stmt = sqlsrv_prepare($this->db, $query);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $data = array();
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $sticker="";
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $sticker = $row['CODSTICKER'];
+            }
+            $this->response->setResponse(true);
+            $this->response->result = $sticker;
+
+            return $this->response;
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
         }
     }
 

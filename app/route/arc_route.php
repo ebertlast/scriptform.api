@@ -89,4 +89,45 @@ $app->group('/archivos/', function () {
             );
     });
 
+    $this->get('sticker/{municipioid}', function ($req, $res, $args) {
+        try {
+            $model = new Model();
+        } catch (Exception $e) {
+            $response = new Response();
+            $response->SetResponse(false, $e->getMessage());
+            return $res
+                ->withHeader('Content-type', 'application/json')
+                ->getBody()
+                ->write(
+                    json_encode(
+                        $response
+                    )
+                );
+        }
+        $jwt = new Tokens();
+
+        // Obtener el token con los datos actualizados
+        $token = $req->getAttribute('token');
+
+        // Decodificar el token para obtener los datos del usuario
+        // $data = $jwt->decode($token);
+        $municipioid = isset($args['municipioid']) ? $args['municipioid'] : '';
+
+        // Llamar el metodo del modelo para generar la respuesta
+        $response = new Response();
+        $response = $model->GenerarSticker($municipioid);
+
+        // Enviar el token en la respuesta
+        $response->setToken($token);
+
+        return $res
+            ->withHeader('Content-type', 'application/json')
+            ->getBody()
+            ->write(
+                json_encode(
+                    $response
+                )
+            );
+    });
+
 });
