@@ -18,7 +18,7 @@ return [
 
         // Database settings
         'database_default' => [
-            'dbhost' => 'DESKTOP-IL7UVNG',
+            'dbhost' => '.',
             'dbname' => 'ScriptForms',
             'dbuser' => 'sa',
             'dbpasswd' => '123456'
