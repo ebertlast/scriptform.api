@@ -2,9 +2,9 @@ IF OBJECT_ID('SPS_PAGINAR','P') IS NOT NULL DROP PROCEDURE SPS_PAGINAR
 GO
 CREATE PROCEDURE SPS_PAGINAR
 	@SQLString NVARCHAR(MAX)	  --Consulta SQL
-	,@PageSize INT			      --Tamaño página
-	,@PageNumber INT		      --Número de página
-	,@PageCount INT OUT		      --Retorno de cantidad de páginas
+	,@PageSize INT			      --TamaÃ±o pÃ¡gina
+	,@PageNumber INT		      --NÃºmero de pÃ¡gina
+	,@PageCount INT OUT		      --Retorno de cantidad de pÃ¡ginas
 AS
 DECLARE @TablaTemp NVARCHAR(10) = RIGHT(REPLACE(NEWID(),'-',''),10)
 DECLARE @OPENQUERY nvarchar(4000)
@@ -30,11 +30,11 @@ BEGIN
 	EXEC('INSERT INTO ##'+@TablaTemp+' WITH (TABLOCK) '+@SQLString)
 	
 
-	--Validación de precondiciones
+	--Validaciï¿½n de precondiciones
 	SET @PageCount = 0
 	IF @PageSize < 1  OR @PageNumber < 1 RETURN
 
-	--Ajuste de cantidad de páginas
+	--Ajuste de cantidad de pï¿½ginas
 	DECLARE @RecordCnt INT = 0
 	--SELECT @RecordCnt = COUNT(*) FROM AFI
 	SET @SQLString=N'SELECT @RecordCnt = COUNT(*) FROM ##'+@TablaTemp
@@ -71,7 +71,7 @@ EXEC	SPS_PAGINAR
 	@PageNumber = 2,
 	@PageCount = @PageCount OUTPUT
 
-PRINT 'PÁGINA 1 DE '+CAST(@PageCount AS VARCHAR)
+PRINT 'Pï¿½GINA 1 DE '+CAST(@PageCount AS VARCHAR)
 SELECT	@PageCount as N'@PageCount'
 
 
