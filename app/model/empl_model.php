@@ -107,13 +107,15 @@ class EmplModel
     {
         try
         {
-            $sqlString = "EXEC DBO.SPS_ABCS_EMPL @ACCION=?, @TipoID = ?, @NumeroIdentificacion = ?, @RazonSocial = ?, @DireccionFiscal = ?, @MunicipioID = ?, @UsuarioID = ?, @SedeID = ?, @NaturalezaID = ?, @RegimeEmpresaID = ?, @TamanoID = ?, @TipoEmpresaID = ?";
+            $sqlString = "EXEC DBO.SPS_ABCS_EMPL @ACCION=?, @TipoID = ?, @NumeroIdentificacion = ?, @RazonSocial = ?, @DireccionFiscal = ?, @Email = ?, @Telefono = ?, @MunicipioID = ?, @UsuarioID = ?, @SedeID = ?, @NaturalezaID = ?, @RegimeEmpresaID = ?, @TamanoID = ?, @TipoEmpresaID = ?";
             $params = array(
                 array('A', SQLSRV_PARAM_IN),
                 array(&$modelo['TipoID'], SQLSRV_PARAM_IN),
                 array(&$modelo['NumeroIdentificacion'], SQLSRV_PARAM_IN),
                 array(&$modelo['RazonSocial'], SQLSRV_PARAM_IN),
                 array(&$modelo['DireccionFiscal'], SQLSRV_PARAM_IN),
+                array(&$modelo['Email'], SQLSRV_PARAM_IN),
+                array(&$modelo['Telefono'], SQLSRV_PARAM_IN),
                 array(&$modelo['MunicipioID'], SQLSRV_PARAM_IN),
                 array(&$modelo['UsuarioID'], SQLSRV_PARAM_IN),
                 array(&$modelo['SedeID'], SQLSRV_PARAM_IN),
@@ -175,13 +177,15 @@ class EmplModel
     {
         try
         {
-            $sqlString = "EXEC DBO.SPS_ABCS_EMPL @ACCION=?, @TipoID = ?, @NumeroIdentificacion = ?, @RazonSocial = ?, @DireccionFiscal = ?, @MunicipioID = ?, @UsuarioID = ?, @SedeID = ?, @NaturalezaID = ?, @RegimeEmpresaID = ?, @TamanoID = ?, @TipoEmpresaID = ?"; 
+            $sqlString = "EXEC DBO.SPS_ABCS_EMPL @ACCION=?, @TipoID = ?, @NumeroIdentificacion = ?, @RazonSocial = ?, @DireccionFiscal = ?, @Email = ?, @Telefono = ?, @MunicipioID = ?, @UsuarioID = ?, @SedeID = ?, @NaturalezaID = ?, @RegimeEmpresaID = ?, @TamanoID = ?, @TipoEmpresaID = ?";
             $params = array(
                 array('C', SQLSRV_PARAM_IN),
                 array(&$modelo['TipoID'], SQLSRV_PARAM_IN),
                 array(&$modelo['NumeroIdentificacion'], SQLSRV_PARAM_IN),
                 array(&$modelo['RazonSocial'], SQLSRV_PARAM_IN),
                 array(&$modelo['DireccionFiscal'], SQLSRV_PARAM_IN),
+                array(&$modelo['Email'], SQLSRV_PARAM_IN),
+                array(&$modelo['Telefono'], SQLSRV_PARAM_IN),
                 array(&$modelo['MunicipioID'], SQLSRV_PARAM_IN),
                 array(&$modelo['UsuarioID'], SQLSRV_PARAM_IN),
                 array(&$modelo['SedeID'], SQLSRV_PARAM_IN),

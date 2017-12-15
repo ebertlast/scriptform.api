@@ -7,6 +7,8 @@ CREATE PROCEDURE DBO.SPS_ABCS_EMPL
 	@NumeroIdentificacion   VARCHAR(16) = NULL,
 	@RazonSocial            VARCHAR(500) = NULL,
 	@DireccionFiscal        VARCHAR(500) = NULL,
+    @Email                  VARCHAR(150) = NULL,
+	@Telefono               VARCHAR(9) = NULL,
     @MunicipioID            VARCHAR(10) = NULL,
     @UsuarioID              VARCHAR(100) = NULL,
     @SedeID                 VARCHAR(100) = NULL,
@@ -26,6 +28,8 @@ BEGIN
       ,[NumeroIdentificacion]
       ,[RazonSocial]
       ,[DireccionFiscal]
+      ,[Email]
+      ,[Telefono]
       ,[MunicipioID]
       ,[UsuarioID]
       ,[SedeID]
@@ -38,6 +42,8 @@ BEGIN
             @NumeroIdentificacion,
             @RazonSocial,
             @DireccionFiscal,
+            @Email,
+            @Telefono,
             @MunicipioID,
             @UsuarioID,
             @SedeID,
@@ -57,6 +63,8 @@ BEGIN
 		UPDATE [dbo].[EMPL]
         SET [RazonSocial] = @RazonSocial
             ,[DireccionFiscal] = @DireccionFiscal
+            ,[Email] = @Email
+            ,[Telefono] = @Telefono
             ,[MunicipioID] = @MunicipioID
             -- ,[UsuarioID] = @UsuarioID
             ,[SedeID] = @SedeID
@@ -73,6 +81,8 @@ BEGIN
             ,[NumeroIdentificacion]
             ,[RazonSocial]
             ,[DireccionFiscal]
+            ,[Email]
+            ,[Telefono]
             ,[MunicipioID]
             ,[UsuarioID]
             ,[SedeID]
@@ -86,6 +96,8 @@ BEGIN
         AND [NumeroIdentificacion] = CASE WHEN @NumeroIdentificacion IS NULL THEN [NumeroIdentificacion] ELSE @NumeroIdentificacion END
         AND [RazonSocial] = CASE WHEN @RazonSocial IS NULL THEN [RazonSocial] ELSE @RazonSocial END
         AND [DireccionFiscal] = CASE WHEN @DireccionFiscal IS NULL THEN [DireccionFiscal] ELSE @DireccionFiscal END
+        AND [Email] = CASE WHEN @Email IS NULL THEN [Email] ELSE @Email END
+        AND [Telefono] = CASE WHEN @Telefono IS NULL THEN [Telefono] ELSE @Telefono END
         AND [MunicipioID] = CASE WHEN @MunicipioID IS NULL THEN [MunicipioID] ELSE @MunicipioID END
         AND [UsuarioID] = CASE WHEN @UsuarioID IS NULL THEN [UsuarioID] ELSE @UsuarioID END
         AND [SedeID] = CASE WHEN @SedeID IS NULL THEN [SedeID] ELSE @SedeID END

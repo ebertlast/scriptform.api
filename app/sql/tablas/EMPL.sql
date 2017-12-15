@@ -6,6 +6,8 @@ CREATE TABLE dbo.EMPL(
 	NumeroIdentificacion VARCHAR(16) NOT NULL,
 	RazonSocial VARCHAR(500) NOT NULL,
 	DireccionFiscal VARCHAR(500) NOT NULL,
+	Email VARCHAR(150) NOT NULL,
+	Telefono VARCHAR(9) NOT NULL,
     MunicipioID VARCHAR(10) NOT NULL,
     UsuarioID VARCHAR(100) NOT NULL,
     SedeID VARCHAR(100) NOT NULL,
