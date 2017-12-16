@@ -149,4 +149,11 @@ class UsuarioModel
             sqlsrv_free_stmt($stmt);
         }
     }
+
+    public function Sesion()
+    {
+        $this->response->result = true;
+        $this->response->setResponse(true);
+        return $this->response;
+    }
 }
