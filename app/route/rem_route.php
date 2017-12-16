@@ -1,9 +1,9 @@
 <?php
 use App\Lib\Response;
 use App\Lib\Tokens;
-use App\Model\NaeModel as Model;
+use App\Model\RemModel as Model;
 
-$app->group('/naturalezaempresa/', function () {
+$app->group('/regimenempresa/', function () {
 
     $this->put('nuevo', function ($req, $res, $args) {
         //region Firma del modelo de la clase
@@ -52,7 +52,7 @@ $app->group('/naturalezaempresa/', function () {
         //endregion
     });
 
-    $this->get('[{NaturalezaID}]', function ($req, $res, $args) {
+    $this->get('[{RegimeEmpresaID}]', function ($req, $res, $args) {
         //region Firma del modelo de la clase
         try {
             $model = new Model();
@@ -72,7 +72,7 @@ $app->group('/naturalezaempresa/', function () {
         
         //region Obtener el token con los datos actualizados y parámetros
         $token = $req->getAttribute('token');
-        $NaturalezaID = isset($args['NaturalezaID']) ? $args['NaturalezaID'] : '';
+        $RegimeEmpresaID = isset($args['RegimeEmpresaID']) ? $args['RegimeEmpresaID'] : '';
         //endregion
         
         //region Decodificar el token para obtener los datos del usuario
@@ -83,7 +83,7 @@ $app->group('/naturalezaempresa/', function () {
 
         //region Llamar el metodo del modelo para generar la respuesta
         $response = new Response();
-        $response = $model->Registros($NaturalezaID);
+        $response = $model->Registros($RegimeEmpresaID);
         //endregion
 
         //region Adjuntar el token en la respuesta
@@ -147,7 +147,7 @@ $app->group('/naturalezaempresa/', function () {
         //endregion
     });
 
-    $this->delete('{NaturalezaID}', function ($req, $res, $args) {
+    $this->delete('{RegimeEmpresaID}', function ($req, $res, $args) {
         //region Firma del modelo de la clase
         try {
             $model = new Model();
@@ -168,12 +168,12 @@ $app->group('/naturalezaempresa/', function () {
         //region Obtener el token para enviarlo en la respuesta y los parametros para generar la consulta
         $jwt = new Tokens();
         $token = $req->getAttribute('token');
-        $NaturalezaID = isset($args['NaturalezaID']) ? $args['NaturalezaID'] : '';
+        $RegimeEmpresaID = isset($args['RegimeEmpresaID']) ? $args['RegimeEmpresaID'] : '';
         //endregion
 
         //region Llamar el metodo del modelo para generar la respuesta
         $response = new Response();
-        $response = $model->EliminarRegistro($NaturalezaID);
+        $response = $model->EliminarRegistro($RegimeEmpresaID);
         //endregion
 
         //region Adjuntar el token en la respuesta
