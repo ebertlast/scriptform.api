@@ -43,7 +43,7 @@ class RemModel
         try
         {
             $query = "EXEC dbo.SPS_ABCS_REM @ACCION = ?";
-            if ($RegimeEmpresaID == '') {
+            if ($RegimeEmpresaID != '') {
                 $query .= ", @RegimeEmpresaID=?";
             }
             $params = array(
@@ -217,7 +217,7 @@ class RemModel
         }
     }
 
-    public function EliminarRegistro($RegimeEmpresaID, $DescripcionRegimenEmpresa)
+    public function EliminarRegistro($RegimeEmpresaID)
     {
         try
         {

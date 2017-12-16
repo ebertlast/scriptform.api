@@ -9,9 +9,9 @@ use Exception;
 //endregion
 
 /**
- * Naturaleza de Empresas
+ * Tipos de Empresas
  */
-class NaeModel
+class TemModel
 {
     //region Variables de entorno, constructor y destructor de la clase
     private $db;
@@ -38,17 +38,17 @@ class NaeModel
     }
     //endregion
 
-    public function Registros($NaturalezaID = '')
+    public function Registros($TipoEmpresaID = '')
     {
         try
         {
-            $query = "EXEC dbo.SPS_ABCS_NAE @ACCION = ?";
-            if ($NaturalezaID != '') {
-                $query .= ", @NaturalezaID=?";
+            $query = "EXEC dbo.SPS_ABCS_TEM @ACCION = ?";
+            if ($TipoEmpresaID != '') {
+                $query .= ", @TipoEmpresaID=?";
             }
             $params = array(
                 array('S', SQLSRV_PARAM_IN),
-                array(&$NaturalezaID, SQLSRV_PARAM_IN),
+                array(&$TipoEmpresaID, SQLSRV_PARAM_IN),
             );
             //region Consulta y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $query, $params);
@@ -103,11 +103,11 @@ class NaeModel
     {
         try
         {
-            $sqlString = "EXEC DBO.SPS_ABCS_NAE @ACCION=?, @NaturalezaID = ?, @DescripcionNaturaleza = ?";
+            $sqlString = "EXEC DBO.SPS_ABCS_TEM @ACCION=?, @TipoEmpresaID = ?, @DescripcionTipoEmpresa = ?";
             $params = array(
                 array('A', SQLSRV_PARAM_IN),
-                array(&$modelo['NaturalezaID'], SQLSRV_PARAM_IN),
-                array(&$modelo['DescripcionNaturaleza'], SQLSRV_PARAM_IN),
+                array(&$modelo['TipoEmpresaID'], SQLSRV_PARAM_IN),
+                array(&$modelo['DescripcionTipoEmpresa'], SQLSRV_PARAM_IN),
             );
             //region Ejecución de Query y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
@@ -162,11 +162,11 @@ class NaeModel
     {
         try
         {
-            $sqlString = "EXEC DBO.SPS_ABCS_NAE @ACCION=?, @NaturalezaID = ?, @DescripcionNaturaleza = ?";
+            $sqlString = "EXEC DBO.SPS_ABCS_TEM @ACCION=?, @TipoEmpresaID = ?, @DescripcionTipoEmpresa = ?";
             $params = array(
                 array('C', SQLSRV_PARAM_IN),
-                array(&$modelo['NaturalezaID'], SQLSRV_PARAM_IN),
-                array(&$modelo['DescripcionNaturaleza'], SQLSRV_PARAM_IN),
+                array(&$modelo['TipoEmpresaID'], SQLSRV_PARAM_IN),
+                array(&$modelo['DescripcionTipoEmpresa'], SQLSRV_PARAM_IN),
             );
             //region Ejecución de Query y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
@@ -217,14 +217,14 @@ class NaeModel
         }
     }
 
-    public function EliminarRegistro($NaturalezaID)
+    public function EliminarRegistro($TipoEmpresaID)
     {
         try
         {
-            $sqlString = "EXEC dbo.SPS_ABCS_NAE @ACCION=?, @NaturalezaID=?";
+            $sqlString = "EXEC dbo.SPS_ABCS_TEM @ACCION=?, @TipoEmpresaID=?";
             $params = array(
                 array('B', SQLSRV_PARAM_IN),
-                array(&$NaturalezaID, SQLSRV_PARAM_IN),
+                array(&$TipoEmpresaID, SQLSRV_PARAM_IN),
             );
             //region Ejecución de Query y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
