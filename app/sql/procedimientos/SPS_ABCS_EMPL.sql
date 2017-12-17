@@ -93,6 +93,7 @@ BEGIN
             ,[FechaRegistro]
         FROM [dbo].[EMPL]
         WHERE 1=1
+        AND [TipoID] = CASE WHEN @TipoID IS NULL THEN [TipoID] ELSE @TipoID END
         AND [NumeroIdentificacion] = CASE WHEN @NumeroIdentificacion IS NULL THEN [NumeroIdentificacion] ELSE @NumeroIdentificacion END
         AND [RazonSocial] = CASE WHEN @RazonSocial IS NULL THEN [RazonSocial] ELSE @RazonSocial END
         AND [DireccionFiscal] = CASE WHEN @DireccionFiscal IS NULL THEN [DireccionFiscal] ELSE @DireccionFiscal END
@@ -109,4 +110,4 @@ BEGIN
 	END
 END
 GO
-EXEC SPS_ABCS_EMPL --'A','900074352', 'RENDIMOS LTDA', 'AVENIDA 28 25 21, BOGOTA, BOGOTA','(1)3402277','900074352',1
+EXEC SPS_ABCS_EMPL --@TipoID='CC'
