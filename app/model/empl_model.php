@@ -43,10 +43,10 @@ class EmplModel
         try
         {
             $query = "EXEC dbo.SPS_ABCS_EMPL @ACCION = ?";
-            if ($TipoID == '') {
+            if ($TipoID != '') {
                 $query .= ", @TipoID=?";
             }
-            if ($NumeroIdentificacion == '') {
+            if ($NumeroIdentificacion != '') {
                 $query .= ", @NumeroIdentificacion=?";
             }
             $params = array(

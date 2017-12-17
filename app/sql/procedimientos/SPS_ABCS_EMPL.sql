@@ -8,7 +8,7 @@ CREATE PROCEDURE DBO.SPS_ABCS_EMPL
 	@RazonSocial            VARCHAR(500) = NULL,
 	@DireccionFiscal        VARCHAR(500) = NULL,
     @Email                  VARCHAR(150) = NULL,
-	@Telefono               VARCHAR(9) = NULL,
+	@Telefono               VARCHAR(10) = NULL,
     @MunicipioID            VARCHAR(10) = NULL,
     @UsuarioID              VARCHAR(100) = NULL,
     @SedeID                 VARCHAR(100) = NULL,
