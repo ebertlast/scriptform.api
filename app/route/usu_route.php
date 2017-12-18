@@ -1,9 +1,9 @@
 <?php
 use App\Lib\Response;
 use App\Lib\Tokens;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 use App\Model\UsuarioModel as Model;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 $app->group('/usuarios/', function () {
     $this->get('[{usuario}]', function ($req, $res, $args) {
@@ -182,11 +182,12 @@ $app->group('/usuarios/', function () {
         //region Llamar el metodo del modelo para generar la respuesta
         $response = $model->ReenviarClave($email);
         $clave = $response->result;
-        if($clave==''){
-            $response -> setResponse(false, "No tenemos registros de algún usuario con el correo electónico '$email'");
-        }else{
-            $response -> setResponse(true);
-            $response -> result = true;
+        if ($clave == '') {
+            $response->setResponse(false, "No tenemos registros de algún usuario con el correo electónico '$email'");
+            $response->result = false;
+        } else {
+            $response->setResponse(true);
+            $response->result = true;
             //region Envío de Email
             $conf = $this->get('settings');
             $mail = new PHPMailer(true);
@@ -203,30 +204,30 @@ $app->group('/usuarios/', function () {
                 $mail->IsSMTP();
                 $mail->SMTPAuth = $conf['mailer']['SMTPAuth'];
                 $mail->addReplyTo($conf['mailer']['ReplyToMail'], $conf['mailer']['ReplyToName']);
-    
+
                 //Cuerpo del correo y destinatarios
                 $mail->AddAddress($email);
                 $mail->isHTML(true);
                 $mail->Subject = 'Reenvío de su clave ScriptForms';
-                $mail->Body    = "Su clave para ingresar al sistema es <b>$clave</b>";
+                $mail->Body = "Su clave para ingresar al sistema es <b>$clave</b>";
                 $mail->AltBody = "Su clave para ingresar al sistema es $clave";
-    
+
                 // Archivos Adjuntos
                 // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
                 // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-    
+
                 $mail->Send();
                 // echo 'Message has been sent';
             } catch (Exception $e) {
                 // echo 'Message could not be sent.';
                 // echo 'Mailer Error: ' . $mail->ErrorInfo;
-                $response->setResponse(false,$mail->ErrorInfo);
+                $response->result = false;
+                $response->setResponse(false, $mail->ErrorInfo);
             }
             //endregion
-            
+
         }
         //endregion
-
 
         //region Adjuntar el token en la respuesta
         $response->setToken($token);
