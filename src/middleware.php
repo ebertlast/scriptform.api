@@ -42,6 +42,9 @@ $app->add(function ($request, $response, $next) {
             ) {
                 $generarNuevoToken = false;
             }
+            if (strrpos($request->getUri()->getPath(), 'reenviarclave') > 0 && $method == 'GET') {
+                $supervisar = false;
+            }
             break;
         case 'sedes':
             if ($method == 'GET') {

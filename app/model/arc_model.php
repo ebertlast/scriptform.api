@@ -75,6 +75,64 @@ class ArcModel
         }
     }
 
+    public function ArchivosPorAfiliado($TipoID, $NumeroIdentificacion)
+    {
+        try
+        {
+            $query = "EXEC dbo.SPS_ABCS_ARC @TIPOID = ?, @NUMEROIDENTIFICACION = ?";
+            $params = array(
+                array(&$TipoID, SQLSRV_PARAM_IN),
+                array(&$NumeroIdentificacion, SQLSRV_PARAM_IN),
+            );
+            //region Consulta y Obtención de Resultados
+            $stmt = sqlsrv_prepare($this->db, $query, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $data = array();
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            //endregion
+            //region Construcción de la respuesta
+            $this->response->setResponse(true);
+            $this->response->result = $data;
+            return $this->response;
+            //endregion
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
+
     public function ArchivosPorUsuario($usuarioid='')
     {
         try
@@ -189,7 +247,7 @@ class ArcModel
         }
     }
 
-    public function GenerarSticker($municipioid){
+    public function GenerarStickerDEPRECATED($municipioid){
         // SELECT '11001'+RIGHT(REPLACE(CONVERT(VARCHAR,GETDATE(),102),'.',''),6)+REPLACE(CONVERT(VARCHAR,GETDATE(),108),':','')
         try
         {
@@ -237,6 +295,62 @@ class ArcModel
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
             return $this->response;
+        }
+    }
+
+    public function GenerarSticker($municipioid)
+    {
+        try
+        {
+            $query = "SELECT CODSTICKER = ?+RIGHT(REPLACE(CONVERT(VARCHAR,GETDATE(),102),'.',''),6)+REPLACE(CONVERT(VARCHAR,GETDATE(),108),':','')";
+            $params = array(
+                array(&$municipioid, SQLSRV_PARAM_IN),
+            );
+            //region Consulta y Obtención de Resultados
+            $stmt = sqlsrv_prepare($this->db, $query, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $sticker = $row['CODSTICKER'];
+            }
+            //endregion
+            //region Construcción de la respuesta
+            $this->response->setResponse(true);
+            $this->response->result = $sticker;
+            return $this->response;
+            //endregion
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
         }
     }
 

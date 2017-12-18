@@ -114,7 +114,7 @@ $app->group('/archivos/', function () {
         $municipioid = isset($args['municipioid']) ? $args['municipioid'] : '';
 
         // Llamar el metodo del modelo para generar la respuesta
-        $response = new Response();
+        // $response = new Response();
         $response = $model->GenerarSticker($municipioid);
 
         // Enviar el token en la respuesta
@@ -128,6 +128,56 @@ $app->group('/archivos/', function () {
                     $response
                 )
             );
+    });
+
+    $this->get('{tipoid}/{numerodocumento}', function ($req, $res, $args) {
+        //region Firma del modelo de la clase
+        try {
+            $model = new Model();
+        } catch (Exception $e) {
+            $response = new Response();
+            $response->SetResponse(false, $e->getMessage());
+            return $res
+                ->withHeader('Content-type', 'application/json')
+                ->getBody()
+                ->write(
+                    json_encode(
+                        $response
+                    )
+                );
+        }
+        //endregion
+        
+        //region Obtener el token con los datos actualizados
+        $token = $req->getAttribute('token');
+        //endregion
+        
+        //region Decodificar el token para obtener los datos del usuario
+        // $jwt = new Tokens();
+        // $data = $jwt->decode($token);
+        $tipoid = isset($args['tipoid']) ? $args['tipoid'] : '';
+        $numerodocumento = isset($args['numerodocumento']) ? $args['numerodocumento'] : '';
+        //endregion
+
+        //region Llamar el metodo del modelo para generar la respuesta
+        $response = new Response();
+        $response = $model->ArchivosPorAfiliado($tipoid,$numerodocumento);
+        //endregion
+
+        //region Adjuntar el token en la respuesta
+        $response->setToken($token);
+        //endregion
+
+        //region Enviar la respuesta
+        return $res
+            ->withHeader('Content-type', 'application/json')
+            ->getBody()
+            ->write(
+                json_encode(
+                    $response
+                )
+            );
+        //endregion
     });
 
 });

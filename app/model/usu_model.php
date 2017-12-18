@@ -156,4 +156,61 @@ class UsuarioModel
         $this->response->setResponse(true);
         return $this->response;
     }
+
+    public function ReenviarClave($email)
+    {
+        try
+        {
+            $query = "SELECT CLAVE = CONVERT(VARCHAR(300), DECRYPTBYPASSPHRASE(DBO.FNS_VALORVARIABLE('KEYCIFRAR'),CLAVE)) FROM USU WHERE EMAIL=?";
+            $params = array(
+                array(&$email, SQLSRV_PARAM_IN),
+            );
+            //region Consulta y Obtención de Resultados
+            $stmt = sqlsrv_prepare($this->db, $query, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $clave="";
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $clave = $row['CLAVE'];
+            }
+            //endregion
+            //region Construcción de la respuesta
+            $this->response->setResponse(true);
+            $this->response->result = $clave;
+            return $this->response;
+            //endregion
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
 }
