@@ -51,6 +51,9 @@ $app->add(function ($request, $response, $next) {
                 $supervisar = false;
             }
             break;
+        // case 'files':
+        //     $supervisar = false;
+        //     break;
         default:
             $supervisar = true;
     }
@@ -84,10 +87,10 @@ $app->add(function ($request, $response, $next) {
             } catch (Exception $e) {
                 $respuesta->SetLogout();
                 $respuesta->SetResponse(false, "Vuelve a iniciar sesión (" . $e->getMessage() . ").");
-                
+
                 return $response
-                ->withHeader('Content-type', 'application/json')
-                ->withJson(($respuesta))
+                    ->withHeader('Content-type', 'application/json')
+                    ->withJson(($respuesta))
                 ;
             }
             // // ************************************************************
@@ -98,10 +101,10 @@ $app->add(function ($request, $response, $next) {
             // ->withHeader('Content-type', 'application/json')
             // ->withJson(($respuesta));
             // // ************************************************************
-            
+
             // var_dump($data);
             /*HACER AQUI LAS VALIDACIONES DE SEGURIDAD A LAS RUTAS POR USUARIO*/
-            
+
             // Hacer que el nuevo token se vaya en la respuesta
             if ($generarNuevoToken) {
                 $nuevoToken = $jwt->encode($data);

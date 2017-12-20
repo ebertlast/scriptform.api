@@ -280,7 +280,7 @@ $app->group('/reportes/', function () {
         $response = new Response();
         $response = $model->ExportacionExcelDesdeSQL($reporteid);
         // $file = $response->result;
-       
+
         // Enviar el token en la respuesta
         $response->setToken($token);
 
@@ -292,6 +292,14 @@ $app->group('/reportes/', function () {
                     $response
                 )
             );
+    });
 
+    $this->get('downloadexcel/[{reporteid}]', function ($req, $res, $args) {
+        $app = \Slim::getInstance();
+        $file = '../../public/files/Scriptform.csv';
+        $filepath = $file;
+		
+		$app->view(new \SimoTod\SlimDownload\DownloadView());
+		$app->render($filepath);
     });
 });

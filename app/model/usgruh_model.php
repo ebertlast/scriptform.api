@@ -111,13 +111,17 @@ class UsgruhModel
     {
         try
         {
-            $sqlString = "EXEC DBO.SPS_ABCS_USGRUH @ACCION=?, @ProcedimientoID = ?, @ControlID = ?, @GrupoID = ?";
+            // var_dump($modelo);
+            
+            $sqlString = "EXEC DBO.SPS_ABCS_USGRUH @ACCION=?, @ProcedimientoID = ?, @ControlID = ?, @GrupoID = ?, @Permiso = ?";
             $params = array(
                 array('A', SQLSRV_PARAM_IN),
                 array(&$modelo['ProcedimientoID'], SQLSRV_PARAM_IN),
                 array(&$modelo['ControlID'], SQLSRV_PARAM_IN),
                 array(&$modelo['GrupoID'], SQLSRV_PARAM_IN),
+                array(&$modelo['Permiso'], SQLSRV_PARAM_IN),
             );
+            // var_dump($params);
             //region Ejecución de Query y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
             if (!$stmt) {
@@ -171,13 +175,15 @@ class UsgruhModel
     {
         try
         {
-            $sqlString = "EXEC DBO.SPS_ABCS_USGRUH @ACCION=?, @ProcedimientoID = ?, @ControlID = ?, @GrupoID = ?";
+            $sqlString = "EXEC DBO.SPS_ABCS_USGRUH @ACCION=?, @ProcedimientoID = ?, @ControlID = ?, @GrupoID = ?, @Permiso = ?";
             $params = array(
                 array('C', SQLSRV_PARAM_IN),
                 array(&$modelo['ProcedimientoID'], SQLSRV_PARAM_IN),
                 array(&$modelo['ControlID'], SQLSRV_PARAM_IN),
                 array(&$modelo['GrupoID'], SQLSRV_PARAM_IN),
+                array(&$modelo['Permiso'], SQLSRV_PARAM_IN),
             );
+            // var_dump($sqlString);
             //region Ejecución de Query y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
             if (!$stmt) {

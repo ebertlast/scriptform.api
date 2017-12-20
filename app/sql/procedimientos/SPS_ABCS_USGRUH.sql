@@ -15,10 +15,16 @@ BEGIN
 	
 	IF @ACCION = 'A'
 	BEGIN
-        INSERT INTO [dbo].[USGRUH]([GrupoID], [ProcedimientoID], [ControlID], [Permiso])
-        SELECT @GrupoID, @ProcedimientoID, @ControlID, ISNULL(@Permiso,0)
-        WHERE NOT EXISTS(SELECT * FROM [dbo].[USGRUH] WHERE GrupoID=@GrupoID )
-        AND ISNULL(@GrupoID,'')<>'' AND ISNULL(@ProcedimientoID,'')<>''
+        IF(SELECT COUNT(*) FROM USGRUH WHERE GrupoID=@GrupoID AND ProcedimientoID=@ProcedimientoID AND ControlID=@ControlID)>0
+        BEGIN
+            SET @ACCION='C'
+        END
+        ELSE
+        BEGIN
+            INSERT INTO [dbo].[USGRUH]([GrupoID], [ProcedimientoID], [ControlID], [Permiso])
+            SELECT @GrupoID, @ProcedimientoID, @ControlID, ISNULL(@Permiso,0)
+            WHERE ISNULL(@GrupoID,'')<>'' AND ISNULL(@ProcedimientoID,'')<>'' AND ISNULL(@ControlID,'')<>''
+        END
  	END 
 	IF @ACCION = 'B'
 	BEGIN
@@ -28,11 +34,11 @@ BEGIN
 	END
 	IF @ACCION = 'C'
 	BEGIN
-        UPDATE [dbo].[USGRUH]
-        SET [ControlID] = CASE WHEN @ControlID IS NULL THEN ControlID ELSE @ControlID END
-            ,[Permiso] = CASE WHEN @Permiso IS NULL THEN Permiso ELSE @Permiso END
+        UPDATE  [dbo].[USGRUH]
+        SET     [Permiso] = CASE WHEN @Permiso IS NULL THEN Permiso ELSE @Permiso END
         WHERE   [ProcedimientoID] = @ProcedimientoID
         AND     [GrupoID] = @GrupoID
+        AND     [ControlID] = @ControlID
 
 	END
 	IF @ACCION = 'S'
@@ -44,6 +50,7 @@ BEGIN
         FROM [dbo].[USGRUH]
         WHERE [ProcedimientoID] = CASE WHEN @ProcedimientoID IS NULL THEN ProcedimientoID ELSE @ProcedimientoID END
         AND     [GrupoID] = CASE WHEN @GrupoID IS NULL THEN GrupoID ELSE @GrupoID END
+        AND     [ControlID] = CASE WHEN @ControlID IS NULL THEN ControlID ELSE @ControlID END
 	END
 END
 GO

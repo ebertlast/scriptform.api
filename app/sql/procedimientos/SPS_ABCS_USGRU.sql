@@ -21,6 +21,10 @@ BEGIN
 	IF @ACCION = 'B'
 	BEGIN
 		DELETE FROM [dbo].[USGRU] WHERE [dbo].[USGRU].[GrupoID] = @GrupoID
+        AND [dbo].[USGRU].[GrupoID] NOT IN(
+            SELECT DISTINCT GRUPOID FROM USU UNION ALL
+            SELECT DISTINCT GRUPOID FROM USGRUH
+        )
 	END
 	IF @ACCION = 'C'
 	BEGIN

@@ -16,7 +16,7 @@ BEGIN
 	BEGIN
                 INSERT INTO [dbo].[USPROH]([ProcedimientoID], [DescripcionControl], [ControlID])
                 SELECT @ProcedimientoID, @DescripcionControl, @ControlID
-                WHERE NOT EXISTS(SELECT * FROM [dbo].[USPROH] WHERE ProcedimientoID=@ProcedimientoID )
+                WHERE NOT EXISTS(SELECT * FROM [dbo].[USPROH] WHERE ProcedimientoID=@ProcedimientoID AND [ControlID]=@ControlID)
                 AND ISNULL(@ProcedimientoID,'')<>'' AND ISNULL(@DescripcionControl,'')<>''
  	END 
 	IF @ACCION = 'B'
