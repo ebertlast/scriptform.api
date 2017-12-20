@@ -477,4 +477,49 @@ $app->group('/usuarios/', function () {
         //endregion
     });
 
+    $this->post('actualizar', function ($req, $res, $args) {
+        //region Firma del modelo de la clase
+        try {
+            $model = new Model();
+        } catch (Exception $e) {
+            $response = new Response();
+            $response->SetResponse(false, $e->getMessage());
+            return $res
+                ->withHeader('Content-type', 'application/json')
+                ->getBody()
+                ->write(
+                    json_encode(
+                        $response
+                    )
+                );
+        }
+        //endregion
+
+        //region Obtener el token para enviarlo en la respuesta y los parametros para generar la consulta
+        $jwt = new Tokens();
+        $token = $req->getAttribute('token');
+        $modelo = json_decode($req->getParsedBody()['json'], true)['model'];
+        //endregion
+
+        //region Llamar el metodo del modelo para generar la respuesta
+        $response = new Response();
+        $response = $model->ActualizarRegistro($modelo);
+        //endregion
+
+        //region Adjuntar el token en la respuesta
+        $response->setToken($token);
+        //endregion
+
+        //region Enviar la respuesta
+        return $res
+            ->withHeader('Content-type', 'application/json')
+            ->getBody()
+            ->write(
+                json_encode(
+                    $response
+                )
+            );
+        //endregion
+    });
+
 });
