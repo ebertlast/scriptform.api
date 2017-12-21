@@ -233,6 +233,7 @@ class UsprohModel
                 array(&$ProcedimientoID, SQLSRV_PARAM_IN),
                 array(&$ControlID, SQLSRV_PARAM_IN),
             );
+            // var_dump($params);
             //region Ejecución de Query y Obtención de Resultados
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
             if (!$stmt) {

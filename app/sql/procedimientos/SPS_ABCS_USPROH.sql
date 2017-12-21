@@ -24,6 +24,7 @@ BEGIN
 		DELETE FROM [dbo].[USPROH] 
                 WHERE   [dbo].[USPROH].[ProcedimientoID] = @ProcedimientoID 
                 AND     [dbo].[USPROH].[ControlID] = @ControlID
+                AND NOT EXISTS (SELECT * FROM USGRUH WHERE ControlID = @ControlID AND ProcedimientoID = @ProcedimientoID)
 	END
 	IF @ACCION = 'C'
 	BEGIN
