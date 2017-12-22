@@ -24,6 +24,15 @@ return [
             'dbpasswd' => '123456'
         ],
 
+        // Database settings
+        'database_lotes' => [
+            'dbhost' => '.',
+            'dbname' => 'RENDIMOS',
+            'dbuser' => 'sa',
+            'dbpasswd' => '123456'
+        ],
+
+
         //Mailer settings
         'mailer2' => [
             'Host' => 'arauca.tepuyserver.net',

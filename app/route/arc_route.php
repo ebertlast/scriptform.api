@@ -46,6 +46,47 @@ $app->group('/archivos/', function () {
             );
     });
 
+    $this->get('archivoPorFormularioID/[{formularioid}]', function ($req, $res, $args) {
+        try {
+            $model = new Model();
+        } catch (Exception $e) {
+            $response = new Response();
+            $response->SetResponse(false, $e->getMessage());
+            return $res
+                ->withHeader('Content-type', 'application/json')
+                ->getBody()
+                ->write(
+                    json_encode(
+                        $response
+                    )
+                );
+        }
+        $jwt = new Tokens();
+
+        // Obtener el token con los datos actualizados
+        $token = $req->getAttribute('token');
+
+        // Decodificar el token para obtener los datos del usuario
+        // $data = $jwt->decode($token);
+        $formularioid = isset($args['formularioid']) ? $args['formularioid'] : '';
+
+        // Llamar el metodo del modelo para generar la respuesta
+        $response = new Response();
+        $response = $model->ArchivoPorFormularioID($formularioid);
+
+        // Enviar el token en la respuesta
+        $response->setToken($token);
+
+        return $res
+            ->withHeader('Content-type', 'application/json')
+            ->getBody()
+            ->write(
+                json_encode(
+                    $response
+                )
+            );
+    });
+
     $this->put('nuevo', function ($req, $res, $args) {
         try {
             $model = new Model();

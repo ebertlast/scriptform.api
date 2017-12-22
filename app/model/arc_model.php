@@ -133,6 +133,63 @@ class ArcModel
         }
     }
 
+    public function ArchivoPorFormularioID($FormularioID)
+    {
+        try
+        {
+            $query = "EXEC dbo.SPS_ABCS_ARC @FORMULARIOID = ?";
+            $params = array(
+                array(&$FormularioID, SQLSRV_PARAM_IN),
+            );
+            //region Consulta y Obtención de Resultados
+            $stmt = sqlsrv_prepare($this->db, $query, $params);
+            if (!$stmt) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            $data = array();
+            $result = sqlsrv_execute($stmt);
+            if (!$result) {
+                $error = "";
+                if (($errors = sqlsrv_errors()) != null) {
+                    foreach ($errors as $error) {
+                        $sqlstate = "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        $code = "Code: " . $error['code'] . "";
+                        $message = "Message: " . $error['message'] . ".";
+                        $error = $sqlstate . ".- (" . $code . ") " . $message;
+                    }
+                }
+                $this->response->setResponse(false);
+                $this->response->message = $error;
+                return $this->response;
+            }
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            //endregion
+            //region Construcción de la respuesta
+            $this->response->setResponse(true);
+            $this->response->result = $data;
+            return $this->response;
+            //endregion
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        } finally {
+            sqlsrv_free_stmt($stmt);
+        }
+    }
+
     public function ArchivosPorUsuario($usuarioid='')
     {
         try
