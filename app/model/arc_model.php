@@ -46,7 +46,6 @@ class ArcModel
                 $this->response->message = $error;
                 return $this->response;
             }
-            $data = array();
             $result = sqlsrv_execute($stmt);
             if (!$result) {
                 $error = "";
@@ -62,6 +61,7 @@ class ArcModel
                 $this->response->message = $error;
                 return $this->response;
             }
+            $data = array();
             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
                 $data[] = $row;
             }
@@ -245,7 +245,7 @@ class ArcModel
         try
         {
             $result = array();
-            $sqlString = "EXEC DBO.SPS_ABCS_ARC @ACCION=?, @ARCHIVOID = ?, @FORMULARIOID = ?, @TIPOID = ?, @NUMEROIDENTIFICACION = ?, @MUNICIPIOID = ?, @USUARIOID = ?, @SEDEID = ?, @NUEVOREGISTRO = ?, @CANTIDADBENEFICIARIOS = ?, @SERIALSTICKER = ?";
+            $sqlString = "EXEC DBO.SPS_ABCS_ARC @ACCION=?, @ARCHIVOID = ?, @FORMULARIOID = ?, @TIPOID = ?, @NUMEROIDENTIFICACION = ?, @MUNICIPIOID = ?, @USUARIOID = ?, @SEDEID = ?, @NUEVOREGISTRO = ?, @CANTIDADBENEFICIARIOS = ?, @SERIALSTICKER = ?, @ASESORID = ?";
             $params = array(
                 array('A', SQLSRV_PARAM_IN),
                 array(&$archivo['ARCHIVOID'], SQLSRV_PARAM_IN),
@@ -258,7 +258,10 @@ class ArcModel
                 array(($archivo['NUEVOREGISTRO'])?"1":"0", SQLSRV_PARAM_IN),
                 array(&$archivo['CANTIDADBENEFICIARIOS'], SQLSRV_PARAM_IN),
                 array(&$archivo['SERIALSTICKER'], SQLSRV_PARAM_IN),
+                array(&$archivo['ASESORID'], SQLSRV_PARAM_IN),
             );
+            // var_dump($sqlString);
+            // var_dump($params);
             $stmt = sqlsrv_prepare($this->db, $sqlString, $params);
             if (!$stmt) {
                 $error = "";
